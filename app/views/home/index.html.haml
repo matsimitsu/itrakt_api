@@ -1,0 +1,59 @@
+%section#slider
+  %ul
+    %li
+      %h2 SliceCraft
+      %p Blablabla
+      = image_tag 'http://dummyimage.com/300x215'
+
+    %li
+      %h2 Ruby on Rails
+      %p Blablabla
+      = image_tag 'http://dummyimage.com/300x215'
+
+    %li
+      %h2 iPad & iPhone
+      %p Blablabla
+      = image_tag 'http://dummyimage.com/300x215'
+
+%section#contact_us
+  %h2= t 'projects.contact_us.title'
+  %p.intro= t('projects.contact_us.intro')
+
+  = render 'projects/step_1'
+%section#steps
+  %h2= t('home.steps.title')
+
+  %div
+    %h3 Step 1
+    %p= t('home.steps.one')
+
+    %h3 Step 2
+    %p= t('home.steps.two')
+
+    %h3 Step 3
+    %p= t('home.steps.three')
+
+%section#the_team
+  %h2= t('home.eighty_beans.title')
+
+  %div
+    %p= raw t('home.eighty_beans.intro')
+
+    %ul
+      = t('home.eighty_beans.points').each do |point|
+        %li= point
+
+%section#comments
+  %h2= t('home.comments.title')
+
+  %div
+    %h3 Fake name 1
+    %blockquote= t('home.comments.first')
+
+    %h3 Fake name 2
+    %blockquote= t('home.comments.second')
+
+    %h3 Fake name 3
+    %blockquote= t('home.comments.third')
+
+#step_2

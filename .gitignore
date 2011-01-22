@@ -1,0 +1,7 @@
+.DS_Store
+tmp
+log/*
+public/uploads
+public/stylesheets/*.css
+public/images/*sprite_info.yml
+public/preview

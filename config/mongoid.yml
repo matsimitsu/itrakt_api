@@ -1,0 +1,15 @@
+defaults: &defaults
+  host: localhost
+
+development:
+  <<: *defaults
+  database: itrakt_development
+
+test:
+  <<: *defaults
+  database: itrakt_test
+  autocreate_indexes: true
+
+production:
+  <<: *defaults
+  database: itrakt_production

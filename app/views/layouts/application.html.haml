@@ -1,0 +1,57 @@
+!!!
+
+%html{:lang => I18n.locale}
+  %head
+    %title=t 'application.name'
+    %meta{:"http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
+    /
+       
+       
+      Thanks for looking at SliceCraft's source code.
+      While you're at it, also take a look at our CSS.
+      For more information or a quote, contact us!
+       
+
+    %meta{:name => "description", :content => raw(t('application.intro'))}
+    %meta{:name => "keywords", :content => raw(t('application.keywords'))}
+    /[if lte IE 8]
+      = javascript_include_tag 'html5'
+    = stylesheet_link_tag 'application'
+    - if Rails.env.production?
+      :javascript
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-3300381-8']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+  %body{:class => "#{I18n.locale} #{@current_currency}"}
+
+    .wrap
+
+      %header
+        %h1= link_to t('application.name'), root_path
+
+        %p.discount= link_to t("application.discount.#{@current_currency}"), new_project_path
+
+        %p.switch_locale
+          = link_to t('application.switch_locale'), root_path(I18n.locale == :nl ? 'en' : 'nl')
+
+      = yield
+
+    %footer
+      .wrap
+        %h2= t 'terms_title'
+
+        %ul
+          = t('terms').each do |term|
+            %li!= term
+
+        %p
+          %span=t 'application.service_of'
+          = link_to '80beans', 'http://www.80beans.com/'
+
+  = javascript_include_tag 'jquery', 'rails', 'application', 'beansbox'

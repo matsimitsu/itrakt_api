@@ -1,0 +1,67 @@
+// reset default margins/baseline
+bleh, html, body, div, span, applet, object, iframe, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, strong, tt, var, dl, dt, dd, blockquote, fieldset, form, i, b, caption, tbody, tfoot, thead, tr, th, td, ul, ol, h1, h2, h3, h4, h5, h6, p
+  margin: 0
+  padding: 0
+  vertical-align: baseline
+
+// common styling
+html
+  overflow-y: scroll
+
+a
+  cursor: pointer
+
+ul, ol
+  list-style: none
+
+img
+  border: 0
+
+table
+  width: 100%
+  border-collapse: collapse
+
+td
+  vertical-align: top
+
+th
+  text-align: left
+
+input[type="submit"],
+button
+  cursor: pointer
+
+input::-moz-focus-inner,
+button::-moz-focus-inner
+  padding: 0 !important
+  border: 0 !important
+
+input[type="submit"]
+  outline: none
+
+// display common html5 elements as block-level
+article, aside, footer, header, hgroup, nav, section, figure, figcaption
+  display: block
+
+// mixins
+
+// Hide an element.
+@mixin hide
+  left: -9999px
+  position: absolute
+
+// Hide the text in an element.
+@mixin hide_text
+  text-indent: -9999px
+  overflow: hidden
+// button on hover
+@mixin b_with_hover($width, $height, $filename)
+  width: $width
+  height: $height
+  display: block
+  border: 0
+  @include hide_text
+  background: sprite-image("#{$filename}.png")
+
+  &:hover
+    background: sprite-image("#{$filename}_hover.png")

@@ -1,0 +1,320 @@
+@import defaults.sass
+
+$color: #20282f
+
+// Custom fonts
+@font-face
+  font-family: "Museo300"
+  src: url(../fonts/museo300-regular-webfont.eot)
+  src: local("☺"),url(../fonts/museo300-regular-webfont.ttf) format("truetype")
+
+@font-face
+  font-family: "Museo500"
+  src: url(../fonts/museo500-regular-webfont.eot)
+  src: local("☺"),url(../fonts/museo500-regular-webfont.ttf) format("truetype")
+
+@font-face
+  font-family: "Museo700"
+  src: url(../fonts/museo700-regular-webfont.eot)
+  src: local("☺"),url(../fonts/museo700-regular-webfont.ttf) format("truetype")
+
+// Call PIE.htc for CSS3 features in IE. Path should be relative from HTML, not CSS.
+@mixin pie
+  behavior: url("javascripts/PIE.htc")
+
+@mixin border_radius($radius)
+  position: relative
+  z-index: 10
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
+  border-radius: $radius
+  @include pie
+
+@mixin dark_bg
+  background: $color
+  color: #fff
+  border: 10px solid #bbb
+  @include border_radius(10px)
+
+@mixin custom_submit($width, $height, $bottom, $right, $filename)
+  width: $width
+  height: $height
+  bottom: $bottom
+  right: $right
+  position: absolute
+  font-family: "Museo500", Verdana, sans-serif
+  font-size: 15px
+  text-shadow: #fff 1px 1px 1px
+  border: none
+  background: sprite-image("#{$filename}.png") no-repeat
+
+body
+  font-family: Verdana, sans-serif
+  font-size: 12px
+  color: $color
+  background: url("../images/bg.gif") repeat-x top #e4e4dd
+
+h2
+  font-family: "Museo500"
+  font-size: 25px
+
+h3
+  font-size: 12px
+  line-height: 20px
+
+p
+  margin-bottom: 15px
+
+li
+  margin-bottom: 15px
+  padding-left: 15px
+  background: url("../images/bg_li.png") no-repeat
+
+label
+  display: block
+  margin-top: 10px
+  line-height: 25px
+
+.wrap,
+header
+  width: 962px
+  position: relative
+  margin: 0 auto
+  overflow: hidden
+
+header
+  height: 125px
+
+h1
+  top: 50px
+  left: 0
+  position: absolute
+
+  a
+    width: 424px
+    height: 50px
+    display: block
+    background: sprite-image("sprite/logo.png")
+    @include hide_text
+
+p.discount
+  top: 0
+  right: 0
+  position: absolute
+
+  a
+    width: 110px
+    height: 111px
+    display: block
+    background: sprite-image("sprite/discount_nl.png")
+    @include hide_text
+
+body.en.euro p.discount a
+  background: sprite-image("sprite/discount_en.png")
+
+body.en.usd p.discount a
+  background: sprite-image("sprite/discount_usd.png")
+
+p.switch_locale a
+  top: 5px
+  right: 105px
+  position: absolute
+  font-family: "Museo500", Verdana, sans-serif
+  font-style: normal
+  text-decoration: none
+  color: $color
+
+//Content starts here
+section
+  float: left
+
+#slider
+  @include border_radius(10px)
+  width: 606px
+  height: 320px
+  float: left
+  border: 10px solid #bbb
+  overflow: hidden
+
+#contact_us
+  width: 256px
+  height: 296px
+  position: relative
+  float: right
+  margin-right: 9px
+  padding: 12px
+  @include dark_bg
+
+  p.intro
+    margin-bottom: 0
+    font-size: 11px
+
+  p.field
+    font-size: 15px
+
+  input
+    width: 251px
+
+    &[type="submit"]
+      @include custom_submit(159px, 46px, 18px, -19px, "sprite/b_contact")
+      padding: 20px 17px
+
+#steps,
+#the_team,
+#comments
+  margin-top: 50px
+
+  h2
+    height: 70px
+    margin-bottom: 20px
+    line-height: 70px
+
+  div
+    width: 285px
+    min-height: 225px
+    padding-left: 28px
+    border-left: solid 1px #bbb
+
+#steps
+  clear: both
+
+  h2
+    width: 279px
+    padding: 0 18px
+    background: sprite-image("sprite/bg_left_star.png") no-repeat
+
+  div
+    border: none
+    margin-left: 10px
+    padding-left: 0
+
+#the_team
+  h2
+    width: 293px
+    padding-left: 40px
+    background: sprite-image("sprite/bg_mid_star.png") no-repeat
+
+  p
+    font-style: italic
+
+  strong
+    color: #007236
+
+  .beans
+    color: #72bf44
+
+#comments
+  h2
+    width: 274px
+    height: 50px
+    line-height: 25px
+    padding: 10px 0 10px 40px
+    background: sprite-image("sprite/bg_right_star.png") no-repeat
+
+  h3,
+  blockquote
+    padding-left: 22px
+
+  h3
+    background: sprite-image("sprite/bg_quote.png") no-repeat
+
+  blockquote
+    margin-bottom: 15px
+
+footer
+  margin-top: 50px
+  clear: both
+  color: #fff
+  background: url("../images/bg_footer.gif") repeat-x top #565c5f
+
+  h2
+    width: 390px
+    height: 50px
+    margin-left: 290px
+    text-align: center
+    font-family: "Museo500"
+    line-height: 38px
+    color: $color
+    background: sprite-image("sprite/bg_footer_h2.png") no-repeat
+
+  ul
+    margin: 15px 0
+    overflow: hidden
+
+  li
+    width: 440px
+    float: left
+    margin: 0 25px 15px 0
+    line-height: 20px
+
+  a
+    color: #fff
+
+  p
+    float: right
+    margin-bottom: 30px
+    padding: 5px 10px
+    font-family: "Museo500"
+    font-size: 14px
+    border: 5px solid #bbb
+    color: $color
+    background: #e5e4dd
+    @include border_radius(10px)
+
+    span
+      float: left
+      display: inline-block
+      margin-top: 1px
+
+    a
+      @include hide_text
+      width: 80px
+      height: 19px
+      float: left
+      margin-left: 5px
+      display: inline-block
+      background: sprite-image("sprite/logo_80beans.png") no-repeat
+
+// Pop ups contact form starts here
+#step_2
+  width: 705px
+  display: none
+  @include dark_bg
+  padding: 20px
+
+  p
+    margin: 15px 0
+    font-family: "Museo500", Verdana, sans-serif
+    font-size: 14px
+
+  .close
+    top: -19px
+    right: -18px
+    position: absolute
+    display: block
+    width: 45px
+    height: 45px
+    @include hide_text
+    background: sprite-image("sprite/b_close.png") no-repeat
+
+  form
+    margin: 40px 0 0 50px
+    padding-bottom: 70px
+
+  .invite
+    margin: 30px 0 20px
+
+  label
+    font-size: 15px
+    line-height: 30px
+
+  input,
+  textarea
+    width: 610px
+
+  span.file
+    background: red
+
+  #projects_submit
+    @include custom_submit(274px, 49px, 30px, -23px, "sprite/b_upload")
+    padding: 22px 17px

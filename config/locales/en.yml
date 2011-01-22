@@ -1,0 +1,12 @@
+en:
+  errors:
+    template:
+      header: Check your input
+
+  doctypes:
+    xhtml_transitional: XHTML 1.0 transitional
+    xhtml_strict: XHTML 1.0 strict
+    html5: HTML5
+
+  application:
+    name: iTrakt
