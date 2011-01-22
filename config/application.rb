@@ -25,8 +25,5 @@ module Itrakt
     config.filter_parameters += [:password, :password_confirmation]
 
     config.active_support.deprecation = :log
-
-    config.action_mailer.delivery_method   = :postmark
-    config.action_mailer.postmark_settings = {:api_key => '9fee03c4-7440-440d-ba23-d2708b20c815'}
   end
 end
