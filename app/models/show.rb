@@ -9,8 +9,9 @@ class Show
     :name => 'name',
     :first_aired => 'first_aired',
     :network => 'network',
-    :rating => 'rating',
-    :tvdb_id => 'id'
+    :tvdb_id => 'id',
+    :air_time => 'air_time',
+    :runtime => 'runtime',
   }
 
   field :overview
@@ -19,12 +20,11 @@ class Show
   field :name
   field :first_aired, :type => Date
   field :network
-  field :rating
   field :tvdb_id
   field :remote_banner_url
   field :remote_poster_url
-  index :tvdb_id
-
+  field :runtime
+  field :air_time
 
   references_many :episodes
 

@@ -13,6 +13,7 @@ class Episode
     :tvdb_id => 'id'
   }
 
+
   field :season_number, :type => Integer
   field :episode_number, :type => Integer
   field :name
