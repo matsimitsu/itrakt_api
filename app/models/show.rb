@@ -21,13 +21,15 @@ class Show
   field :network
   field :rating
   field :tvdb_id
-
+  field :remote_banner_url
+  field :remote_poster_url
   index :tvdb_id
 
 
   references_many :episodes
 
   mount_uploader :banner, BannerUploader
+  mount_uploader :poster, PosterUploader
 
   def tvdb_reference
     tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
@@ -52,6 +54,7 @@ class Show
       end
 
       new_show_data[:remote_banner_url] = show.series_banners('en').first.url rescue nil
+      new_show_data[:remote_poster_url] = show.posters('en').first.url rescue nil
 
       create(new_show_data)
     end

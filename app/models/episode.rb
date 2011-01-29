@@ -22,6 +22,7 @@ class Episode
   field :air_date, :type => Date
   field :guest_stars, :type => Array
   field :tvdb_id
+  field :remote_thumb_url
 
   index(
     [
