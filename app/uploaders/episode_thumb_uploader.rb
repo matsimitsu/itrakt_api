@@ -12,7 +12,7 @@ class EpisodeThumbUploader < CarrierWave::Uploader::Base
   def filename
     if original_filename
       extension = File.extname(file.file)
-      "#{model.tvdb_id}-#{model.season_number}-#{model.episode_number}#{extension}"
+      "#{model.show_tvdb_id}-#{model.season_number}-#{model.episode_number}#{extension}"
     end
   end
 

@@ -23,6 +23,7 @@ class Episode
   field :air_date, :type => Date
   field :guest_stars, :type => Array
   field :tvdb_id
+  field :show_tvdb_id
   field :remote_thumb_url
 
   index(
@@ -55,6 +56,7 @@ class Episode
         new_episode_data[fld] = episode.send(remote_fld)
       end
 
+      new_episode_data[:show_tvdb_id] = show.tvdb_id
       new_episode_data[:remote_thumb_url] = episode.thumb rescue nil
 
       show.episodes.create(new_episode_data)
