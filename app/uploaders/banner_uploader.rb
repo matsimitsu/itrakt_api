@@ -6,16 +6,14 @@ class BannerUploader < CarrierWave::Uploader::Base
   storage :file
 
   def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}"
   end
 
-  version :iphone_retina do
-    process :resize_to_fill => [640, 118]
+  def filename
+    if original_filename
+      extension = File.extname(file.file)
+      "#{model.tvdb_id}#{extension}"
+    end
   end
-
-  version :iphone do
-    process :resize_to_fill => [320, 59]
-  end
-
 
 end
