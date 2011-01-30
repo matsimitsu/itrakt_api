@@ -1,5 +1,6 @@
 require 'uri'
 require 'yajl/http_stream'
+require 'digest/sha1'
 
 module Trakt
 
@@ -22,9 +23,10 @@ module Trakt
         "user/calendar/shows.json/"
       end
 
-      def initialize(api_key, username)
+      def initialize(api_key, username, password)
         self.url = "#{Trakt::base_url}/#{path}/#{api_key}/#{username}/#{1.day.ago.strftime("%Y%m%d")}"
-        self.results = Yajl::HttpStream.get(url)
+        body = {:username => username, :password => password}.to_json
+        self.results = Yajl::HttpStream.post(url, body)
       end
 
       def enriched_results
@@ -54,9 +56,10 @@ module Trakt
         "user/watched/episodes.json/"
       end
 
-      def initialize(api_key, username)
+      def initialize(api_key, username, password)
         self.url = "#{Trakt::base_url}/#{path}/#{api_key}/#{username}"
-        self.results = Yajl::HttpStream.get(url)
+        body = {:username => username, :password => password}.to_json
+        self.results = Yajl::HttpStream.post(url, body)
       end
 
       def enriched_results
