@@ -6,13 +6,13 @@ class PosterUploader < CarrierWave::Uploader::Base
   storage :file
 
   def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}"
+    "uploads/#{model.tvdb_id}"
   end
 
   def filename
     if original_filename
       extension = File.extname(file.file)
-      "#{model.tvdb_id}#{extension}"
+      "#{mounted_as}#{extension}"
     end
   end
 
