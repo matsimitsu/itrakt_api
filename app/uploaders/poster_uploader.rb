@@ -12,7 +12,7 @@ class PosterUploader < CarrierWave::Uploader::Base
   def filename
     if original_filename
       extension = File.extname(file.file)
-      "#{mounted_as}#{extension}"
+      "#{mounted_as}-#{model.tvdb_id}#{extension}"
     end
   end
 
