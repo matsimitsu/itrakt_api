@@ -40,7 +40,7 @@ module Trakt
             res['show']['air_time'] = show.air_time
             episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
             res['episode']['overview'] = episode.overview
-            res['episode']['thumb'] = Trakt::external_url(episode.thumb_filename.exists? ? episode.thumb.url : show.default_thumb.url)
+            res['episode']['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
             res
           end
           day
