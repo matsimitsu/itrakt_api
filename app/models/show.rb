@@ -30,6 +30,7 @@ class Show
 
   mount_uploader :banner, BannerUploader
   mount_uploader :poster, PosterUploader
+  mount_uploader :default_thumb, DefaultThumbUploader
 
   def tvdb_reference
     tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
@@ -55,6 +56,7 @@ class Show
 
       new_show_data[:remote_banner_url] = show.series_banners('en').first.url rescue nil
       new_show_data[:remote_poster_url] = show.posters('en').first.url rescue nil
+      new_show_data[:remote_default_thumb_url] = show.fanart('en').first.url rescue nil
 
       create(new_show_data)
     end

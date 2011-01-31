@@ -35,6 +35,8 @@ module Trakt
             show = Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
             res['show']['banner'] = Trakt::external_url(show.banner.url)
             res['show']['poster'] = Trakt::external_url(show.poster.url)
+            res['show']['default_thumb'] = Trakt::external_url(show.default_thumb.url(:resized))
+
             res['show']['overview'] = show.overview
             res['show']['network'] = show.network
             res['show']['air_time'] = show.air_time
