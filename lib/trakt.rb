@@ -33,16 +33,14 @@ module Trakt
         results.map do |day|
           day['episodes'].map do |res|
             show = Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
-            res['show']['banner'] = Trakt::external_url(show.banner.url)
             res['show']['poster'] = Trakt::external_url(show.poster.url)
-            res['show']['default_thumb'] = Trakt::external_url(show.default_thumb.url)
 
             res['show']['overview'] = show.overview
             res['show']['network'] = show.network
             res['show']['air_time'] = show.air_time
             episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
             res['episode']['overview'] = episode.overview
-            res['episode']['thumb'] = Trakt::external_url(episode.thumb.url)
+            res['episode']['thumb'] = Trakt::external_url(episode.thumb_filename.exists? ? episode.thumb.url : show.default_thumb.url)
             res
           end
           day
