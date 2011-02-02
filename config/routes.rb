@@ -1,6 +1,9 @@
 Itrakt::Application.routes.draw do
 
   root :to => 'home#index'
+
+  match 'shows/:tvdb_id/season/:season_number/episodes' => 'shows#season'
+
   resources :users do
     collection do
       get :watched

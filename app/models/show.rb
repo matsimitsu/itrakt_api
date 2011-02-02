@@ -50,6 +50,14 @@ class Show
     save
   end
 
+  def embedded_episodes_by_season(season_number)
+    embedded_episodes.select { |ee| ee.season_number.to_s == season_number.to_s } rescue []
+  end
+
+  def embedded_episode(season_number, episode_number)
+    embedded_episodes.select { |ee| ee.season_number == season_number && ee.episode_number == episode_number }.first rescue nil
+  end
+
   def create_embedded_episode_from_tvdb_data(episode)
     new_episode_data = {}
     new_episode_data[:identifier] = "#{episode.season_number}x#{episode.number}"
