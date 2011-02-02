@@ -27,6 +27,7 @@ class Show
   field :air_time
 
   references_many :episodes
+  embeds_many :embedded_episodes, :class_name => 'Show::EmbeddedEpisode'
 
   mount_uploader :banner, BannerUploader
   mount_uploader :poster, PosterUploader
@@ -35,6 +36,29 @@ class Show
   def tvdb_reference
     tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
     tvdb.get_series_by_id(tvdb_id)
+  end
+
+  def update_episodes
+    fetched_episodes = tvdb_reference.episodes
+    fetched_episodes.each do |episode|
+      new_episode = create_embedded_episode_from_tvdb_data(episode)
+      unless embedded_episodes.map(&:identifier).include?(new_episode.identifier)
+        embedded_episodes << new_episode
+        Rails.logger.info("Added: #{new_episode.name} TO #{name}")
+      end
+    end
+    save
+  end
+
+  def create_embedded_episode_from_tvdb_data(episode)
+    new_episode_data = {}
+    new_episode_data[:identifier] = "#{episode.season_number}x#{episode.number}"
+
+    EmbeddedEpisode::API_FIELDS.each do |fld, remote_fld|
+      new_episode_data[fld] = episode.send(remote_fld)
+    end
+
+    Show::EmbeddedEpisode.new(new_episode_data)
   end
 
   class << self
