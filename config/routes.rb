@@ -2,9 +2,8 @@ Itrakt::Application.routes.draw do
 
   root :to => 'home#index'
 
-  resources :shows do
-    match '/:tvdb_id/season/:season_number/episodes' => 'shows#season'
-  end
+  match 'shows/:tvdb_id/season/:season_number/episodes' => 'shows#season'
+  resources :shows
 
   resources :users do
     collection do
