@@ -57,6 +57,7 @@ module Trakt
 
       def enriched_results
         results.map do |day|
+          day['date_epoch'] = Date.parse(day['date']).strftime('%s')
           day['episodes'].map do |res|
             show = Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
             res['show']['poster'] = Trakt::external_url(show.poster.url)
