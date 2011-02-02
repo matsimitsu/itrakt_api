@@ -22,7 +22,7 @@ module Itrakt
 
     config.encoding = 'utf-8'
 
-    config.filter_parameters += [:password, :password_confirmation]
+    config.filter_parameters += [:password]
 
     config.active_support.deprecation = :log
   end

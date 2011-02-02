@@ -5,3 +5,6 @@ public/uploads
 public/stylesheets/*.css
 public/images/*sprite_info.yml
 public/preview
+config/deploy.rb
+config/initializers/thetvdb.rb
+config/initializers/trakt.rb

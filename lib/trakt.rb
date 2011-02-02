@@ -15,12 +15,38 @@ module Trakt
 
   module User
 
+    class Library
+
+      attr_accessor :url, :results
+
+      def path
+        "user/library/shows.json"
+      end
+
+      def initialize(api_key, username, password)
+        self.url = "#{Trakt::base_url}/#{path}/#{api_key}/#{username}"
+        body = {:username => username, :password => password}.to_json
+        self.results = Yajl::HttpStream.post(url, body)
+      end
+
+      def enriched_results
+        results.map do |res|
+          show = Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
+          res['poster'] = Trakt::external_url(show.poster.url)
+          res['overview'] = show.overview
+          res['network'] = show.network
+          res['air_time'] = show.air_time
+          res
+        end
+      end
+    end
+
     class Calendar
 
       attr_accessor :url, :results
 
       def path
-        "user/calendar/shows.json/"
+        "user/calendar/shows.json"
       end
 
       def initialize(api_key, username, password)
@@ -53,7 +79,7 @@ module Trakt
       attr_accessor :url, :results
 
       def path
-        "user/watched/episodes.json/"
+        "user/watched/episodes.json"
       end
 
       def initialize(api_key, username, password)

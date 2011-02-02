@@ -14,12 +14,7 @@ gem 'will_paginate', '3.0.pre2'
 gem 'mini_magick'
 gem 'carrierwave'
 
-gem 'postmark'
-gem 'postmark-rails'
-
 gem 'capistrano'
-
-gem 'smurf' # Minifies javascript
 
 group :test do
   gem 'rspec-rails'
@@ -30,7 +25,6 @@ group :test do
   gem 'machinist_mongo', '1.1.1', :require => 'machinist/mongoid'
   gem 'faker'
   gem 'database_cleaner'
-  gem 'email_spec'
   gem 'timecop'
   gem 'thin'
   gem 'fuubar'

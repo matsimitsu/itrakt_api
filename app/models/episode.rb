@@ -1,6 +1,7 @@
 class Episode
   include Mongoid::Document
   include Mongoid::Timestamps
+
   API_FIELDS = {
     :overview => 'overview',
     :season_number => 'season_number',
@@ -12,7 +13,6 @@ class Episode
     :guest_stars => 'guest_stars',
     :tvdb_id => 'id'
   }
-
 
   field :season_number, :type => Integer
   field :episode_number, :type => Integer
@@ -31,7 +31,6 @@ class Episode
       [ :show_id, Mongo::ASCENDING ],
       [ :season_number, Mongo::ASCENDING ],
       [ :episode_number, Mongo::ASCENDING ]
-
     ]
   )
 
