@@ -64,7 +64,7 @@ module Trakt
 
             res['show']['overview'] = show.overview
             res['show']['network'] = show.network
-            res['show']['air_time'] = show.air_time
+            res['show']['air_time'] = Time.parse(show.air_time).strftime("%T")
             episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
             res['episode']['overview'] = episode.overview
             res['episode']['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
