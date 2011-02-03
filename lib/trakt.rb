@@ -79,7 +79,7 @@ module Trakt
       def enriched_results
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
-          res['show']['banner'] = Trakt::external_url(show.banner.url)
+          res['show']['poster'] = Trakt::external_url(show.poster.url)
           res['show']['overview'] = show.overview
 
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
@@ -108,7 +108,7 @@ module Trakt
           ep['overview'] = episode.overview
           ep['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
         end
-        results['banner'] = Trakt::external_url(show.banner.url)
+        results['poster'] = Trakt::external_url(show.poster.url)
         results
       end
     end
@@ -153,9 +153,26 @@ module Trakt
       end
     end
 
+
+    class Trending < Trakt::Base
+
+      def initialize
+        self.results = Yajl::HttpStream.get(url)
+      end
+
+      def url
+        "#{Trakt::base_url}/shows/trending.json/#{Trakt::API_KEY}"
+      end
+
+      def enriched_results
+        results.map do |res|
+          show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
+          res['poster'] = Trakt::external_url(show.poster.url)
+        end
+      end
+    end
+
+
   end
 
 end
-
-
-
