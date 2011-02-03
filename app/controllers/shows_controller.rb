@@ -1,21 +1,29 @@
 class ShowsController < ApplicationController
 
   def show
-    @show = Show.first(:conditions => { :tvdb_id => params[:id]})
-    if @show
-      render :text => @show.to_json
-    else
-      render :nothing => true, :head => :not_found
+    tvdb_id = params[:id]
+    library = Rails.cache.fetch("show_#{tvdb_id}", :expires_in => 10.minutes) do
+      Trakt::User::Show.new(tvdb_id).enriched_results.to_json
     end
+    render :text => library
+  end
+
+
+  def seasons
+    tvdb_id = params[:tvdb_id]
+    library = Rails.cache.fetch("seasons_#{tvdb_id}", :expires_in => 10.minutes) do
+      Trakt::User::Seasons.new(tvdb_id).enriched_results.to_json
+    end
+    render :text => library
   end
 
   def season
-    @show = Show.first(:conditions => { :tvdb_id => params[:tvdb_id]})
-    if @show
-      render :text => @show.embedded_episodes_by_season(params[:season_number]).to_json
-    else
-      render :nothing => true, :head => :not_found
+    tvdb_id = params[:tvdb_id]
+    season_number = params[:season_number]
+    library = Rails.cache.fetch("season_#{tvdb_id}_#{season_number}", :expires_in => 10.minutes) do
+      Trakt::User::Season.new(tvdb_id, season_number).enriched_results.to_json
     end
+    render :text => library
   end
 
 end
