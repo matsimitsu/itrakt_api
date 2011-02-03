@@ -119,6 +119,7 @@ module Trakt
         self.tvdb_id = tvdb_id
         self.results = Yajl::HttpStream.get(url)
       end
+
       def url
         "#{Trakt::base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
       end
@@ -136,9 +137,9 @@ module Trakt
         self.season = season
         self.results = Yajl::HttpStream.get(url)
       end
+
       def url
         "#{Trakt::base_url}/show/season.json/#{Trakt::API_KEY}/#{tvdb_id}/#{season}"
-        Rails.logger.debug("#{Trakt::base_url}/show/season.json/#{Trakt::API_KEY}/#{tvdb_id}/#{season}")
       end
 
       def enriched_results
