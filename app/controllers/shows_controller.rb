@@ -11,19 +11,27 @@ class ShowsController < ApplicationController
 
   def seasons
     tvdb_id = params[:tvdb_id]
-    library = Rails.cache.fetch("seasons_#{tvdb_id}", :expires_in => 10.minutes) do
+    result = Rails.cache.fetch("seasons_#{tvdb_id}", :expires_in => 10.minutes) do
       Trakt::User::Seasons.new(tvdb_id).enriched_results.to_json
     end
-    render :text => library
+    render :text => result
   end
 
   def season
     tvdb_id = params[:tvdb_id]
     season_number = params[:season_number]
-    library = Rails.cache.fetch("season_#{tvdb_id}_#{season_number}", :expires_in => 10.minutes) do
+    result = Rails.cache.fetch("season_#{tvdb_id}_#{season_number}", :expires_in => 10.minutes) do
       Trakt::User::Season.new(tvdb_id, season_number).enriched_results.to_json
     end
-    render :text => library
+    render :text => result
   end
 
+  def trending
+    tvdb_id = params[:tvdb_id]
+    season_number = params[:season_number]
+    result = Rails.cache.fetch("trending", :expires_in => 5.minutes) do
+      Trakt::User::Trending.new.enriched_results.to_json
+    end
+    render :text => result
+  end
 end
