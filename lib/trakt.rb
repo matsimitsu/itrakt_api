@@ -107,6 +107,7 @@ module Trakt
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, ep['season'], ep['number'])
           ep['overview'] = episode.overview
           ep['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
+          ep
         end
         results['poster'] = Trakt::external_url(show.poster.url)
         results
@@ -148,6 +149,7 @@ module Trakt
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, season, ep['episode'])
           ep['overview'] = episode.overview
           ep['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
+          ep
         end
         results
       end
@@ -168,6 +170,7 @@ module Trakt
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
           res['poster'] = Trakt::external_url(show.poster.url)
+          res
         end
       end
     end
