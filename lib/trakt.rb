@@ -29,7 +29,7 @@ module Trakt
     class Library < Trakt::Base
 
       def url
-        "#{Trakt::base_url}/#{path}/#{Trakt::API_KEY}/#{username}"
+        "#{Trakt::base_url}/user/library/shows.json/#{Trakt::API_KEY}/#{username}"
       end
 
       def enriched_results
