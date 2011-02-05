@@ -1,4 +1,6 @@
 .DS_Store
+.bundle
+.sass-cache
 tmp
 log/*
 public/uploads
