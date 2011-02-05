@@ -39,7 +39,7 @@ class Episode
   mount_uploader :thumb, EpisodeThumbUploader
 
   def thumb_url
-    thumb_filename.present? ? episode.thumb.url : show.thumb_url
+    thumb_filename.present? ? thumb.url : show.thumb_url
   end
 
   class << self
