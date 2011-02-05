@@ -23,3 +23,12 @@ end
 def stub_image(filename='design.jpg')
   File.join(Rails.root, 'spec/images', filename)
 end
+
+
+def tvdb_show
+  @show ||= Show.create_from_tvdb_id('82438')
+end
+
+def another_tvdb_show
+  @another_show ||= Show.create_from_tvdb_id('82066')
+end

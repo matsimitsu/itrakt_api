@@ -1,3 +1,3 @@
 module Tvdb
-  API_KEY = 'C1B1678E3A48C601'
+  API_KEY = TVDB_API_KEY
 end

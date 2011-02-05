@@ -4,3 +4,6 @@ require 'faker'
 
 Show.blueprint do
 end
+
+Episode.blueprint do
+end
