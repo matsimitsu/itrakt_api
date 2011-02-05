@@ -33,6 +33,15 @@ class Show
   mount_uploader :poster, PosterUploader
   mount_uploader :default_thumb, DefaultThumbUploader
 
+
+  def poster_url
+    show.poster_filename.present? ? show.poster.url : '/images/default_poster.jpg'
+  end
+
+  def thumb_url
+    show.default_thumb_filename.present? ? show.default_thumb.url : '/images/default_thumb.jpg'
+  end
+
   def tvdb_reference
     tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
     tvdb.get_series_by_id(tvdb_id)

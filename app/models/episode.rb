@@ -38,6 +38,10 @@ class Episode
 
   mount_uploader :thumb, EpisodeThumbUploader
 
+  def thumb_url
+    thumb_filename.present? ? episode.thumb.url : show.thumb_url
+  end
+
   class << self
 
     def find_or_fetch_from_show_and_season_and_episode(show, season, episode)

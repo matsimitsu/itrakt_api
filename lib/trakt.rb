@@ -35,8 +35,8 @@ module Trakt
       def enriched_results
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
-          res['poster'] = Trakt::external_url(show.poster.url)
-          res['thumb'] = Trakt::external_url(show.default_thumb.url)
+          res['poster'] = Trakt::external_url(show.poster_url)
+          res['thumb'] = Trakt::external_url(show.thumb_url)
           res['overview'] = show.overview
           res['network'] = show.network
           res['air_time'] = show.air_time
@@ -56,14 +56,14 @@ module Trakt
           day['date_epoch'] = Date.parse(day['date']).strftime('%s')
           day['episodes'].map do |res|
             show = ::Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
-            res['show']['poster'] = Trakt::external_url(show.poster.url)
+            res['show']['poster'] = Trakt::external_url(show.poster_url)
 
             res['show']['overview'] = show.overview
             res['show']['network'] = show.network
             res['show']['air_time'] = Time.parse(show.air_time).strftime("%T")
             episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
             res['episode']['overview'] = episode.overview
-            res['episode']['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
+            res['episode']['thumb'] = Trakt::external_url(episode.thumb_url)
             res
           end
           day
@@ -80,7 +80,7 @@ module Trakt
       def enriched_results
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
-          res['show']['poster'] = Trakt::external_url(show.poster.url)
+          res['show']['poster'] = Trakt::external_url(show.poster_url)
           res['show']['overview'] = show.overview
 
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
@@ -107,11 +107,11 @@ module Trakt
         results['top_episodes'].map do |ep|
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, ep['season'], ep['number'])
           ep['overview'] = episode.overview
-          ep['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
+          ep['thumb'] = Trakt::external_url(episode.thumb_url)
           ep
         end
-        results['poster'] = Trakt::external_url(show.poster.url)
-        results['thumb'] = Trakt::external_url(show.default_thumb.url)
+        results['poster'] = Trakt::external_url(show.poster_url)
+        results['thumb'] = Trakt::external_url(show.thumb_url)
         results
       end
     end
@@ -150,7 +150,7 @@ module Trakt
         results.map do |ep|
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, season, ep['episode'])
           ep['overview'] = episode.overview
-          ep['thumb'] = Trakt::external_url(episode.thumb_filename.present? ? episode.thumb.url : show.default_thumb.url)
+          ep['thumb'] = Trakt::external_url(episode.thumb_url)
           ep
         end
         results
@@ -171,8 +171,8 @@ module Trakt
       def enriched_results
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
-          res['poster'] = Trakt::external_url(show.poster.url)
-          res['thumb'] = Trakt::external_url(show.default_thumb.url)
+          res['poster'] = Trakt::external_url(show.poster_url)
+          res['thumb'] = Trakt::external_url(show.thumb_url)
           res['network'] = show.network
           res['air_time'] = show.air_time
           res
