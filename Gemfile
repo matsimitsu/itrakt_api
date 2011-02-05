@@ -15,7 +15,7 @@ gem 'mini_magick'
 gem 'carrierwave'
 
 gem 'capistrano'
-
+gem 'capfire'
 group :test do
   gem 'rspec-rails'
   gem 'steak', '0.4.0.beta.1'

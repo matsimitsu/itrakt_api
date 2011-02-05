@@ -1,5 +1,7 @@
 require 'bundler/capistrano'
 require 'config/boot'
+require 'capfire/capistrano'
+
 
 set :application, 'itrakt'
 set :branch, 'master'

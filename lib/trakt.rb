@@ -36,6 +36,7 @@ module Trakt
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
           res['poster'] = Trakt::external_url(show.poster.url)
+          res['thumb'] = Trakt::external_url(show.default_thumb.url)
           res['overview'] = show.overview
           res['network'] = show.network
           res['air_time'] = show.air_time
@@ -110,6 +111,7 @@ module Trakt
           ep
         end
         results['poster'] = Trakt::external_url(show.poster.url)
+        results['thumb'] = Trakt::external_url(show.default_thumb.url)
         results
       end
     end
@@ -170,6 +172,9 @@ module Trakt
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
           res['poster'] = Trakt::external_url(show.poster.url)
+          res['thumb'] = Trakt::external_url(show.default_thumb.url)
+          res['network'] = show.network
+          res['air_time'] = show.air_time
           res
         end
       end
