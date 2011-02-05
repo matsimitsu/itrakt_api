@@ -35,11 +35,11 @@ class Show
 
 
   def poster_url
-    show.poster_filename.present? ? show.poster.url : '/images/default_poster.jpg'
+    poster_filename.present? ? poster.url : '/images/default_poster.jpg'
   end
 
   def thumb_url
-    show.default_thumb_filename.present? ? show.default_thumb.url : '/images/default_thumb.jpg'
+    default_thumb_filename.present? ? default_thumb.url : '/images/default_thumb.jpg'
   end
 
   def tvdb_reference
