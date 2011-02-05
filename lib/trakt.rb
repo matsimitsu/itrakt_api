@@ -15,18 +15,22 @@ module Trakt
 
   class Base
     attr_accessor :results, :username, :password, :tvdb_id
-
-    def initialize(username, password)
-      self.username = username
-      self.password = password
-      body = {:username => username, :password => password}.to_json
-      self.results = Yajl::HttpStream.post(url, body)
-    end
   end
 
   module User
 
-    class Library < Trakt::Base
+    class Base < Trakt::Base
+
+      def initialize(username, password)
+        self.username = username
+        self.password = password
+        body = {:username => username, :password => password}.to_json
+        self.results = Yajl::HttpStream.post(url, body)
+      end
+
+    end
+
+    class Library < Trakt::User::Base
 
       def url
         "#{Trakt::base_url}/user/library/shows.json/#{Trakt::API_KEY}/#{username}"
@@ -45,7 +49,7 @@ module Trakt
       end
     end
 
-    class Calendar < Trakt::Base
+    class Calendar < Trakt::User::Base
 
       def url
         "#{Trakt::base_url}/user/calendar/shows.json/#{Trakt::API_KEY}/#{username}"
@@ -71,7 +75,7 @@ module Trakt
       end
     end
 
-    class Watched < Trakt::Base
+    class Watched < Trakt::User::Base
 
       def url
         "#{Trakt::base_url}/user/watched/episodes.json/#{Trakt::API_KEY}/#{username}"
@@ -91,12 +95,21 @@ module Trakt
 
     end
 
-    class Show < Trakt::Base
+  end
+
+  module Show
+
+    class Base < Trakt::Base
 
       def initialize(tvdb_id)
         self.tvdb_id = tvdb_id
         self.results = Yajl::HttpStream.get(url)
       end
+
+    end
+
+
+    class Show < Trakt::Show::Base
 
       def url
         "#{Trakt::base_url}/show/summary.json/#{Trakt::API_KEY}/#{tvdb_id}/true"
@@ -116,12 +129,7 @@ module Trakt
       end
     end
 
-    class Seasons < Trakt::Base
-
-      def initialize(tvdb_id)
-        self.tvdb_id = tvdb_id
-        self.results = Yajl::HttpStream.get(url)
-      end
+    class Seasons < Trakt::Show::Base
 
       def url
         "#{Trakt::base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
@@ -132,13 +140,12 @@ module Trakt
       end
     end
 
-    class Season < Trakt::Base
+    class Season < Trakt::Show::Base
       attr_accessor :season
 
       def initialize(tvdb_id, season)
-        self.tvdb_id = tvdb_id
         self.season = season
-        self.results = Yajl::HttpStream.get(url)
+        super(tvdb_id)
       end
 
       def url
@@ -156,7 +163,6 @@ module Trakt
         results
       end
     end
-
 
     class Trending < Trakt::Base
 
@@ -179,7 +185,6 @@ module Trakt
         end
       end
     end
-
 
   end
 
