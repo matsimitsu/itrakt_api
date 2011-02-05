@@ -46,7 +46,7 @@ describe Episode do
     end
 
     it "should return the default tumb url" do
-      @show.thumb_filename = nil
+      @show.default_thumb_filename = nil
       episode = @show.episodes.new
       episode.thumb_url.should == '/images/default_thumb.jpg'
     end

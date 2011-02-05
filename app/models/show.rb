@@ -47,37 +47,6 @@ class Show
     tvdb.get_series_by_id(tvdb_id)
   end
 
-  def update_episodes
-    fetched_episodes = tvdb_reference.episodes
-    fetched_episodes.each do |episode|
-      new_episode = create_embedded_episode_from_tvdb_data(episode)
-      unless embedded_episodes.map(&:identifier).include?(new_episode.identifier)
-        embedded_episodes << new_episode
-        Rails.logger.info("Added: #{new_episode.name} TO #{name}")
-      end
-    end
-    save
-  end
-
-  def embedded_episodes_by_season(season_number)
-    embedded_episodes.select { |ee| ee.season_number.to_s == season_number.to_s } rescue []
-  end
-
-  def embedded_episode(season_number, episode_number)
-    embedded_episodes.select { |ee| ee.season_number == season_number && ee.episode_number == episode_number }.first rescue nil
-  end
-
-  def create_embedded_episode_from_tvdb_data(episode)
-    new_episode_data = {}
-    new_episode_data[:identifier] = "#{episode.season_number}x#{episode.number}"
-
-    EmbeddedEpisode::API_FIELDS.each do |fld, remote_fld|
-      new_episode_data[fld] = episode.send(remote_fld)
-    end
-
-    Show::EmbeddedEpisode.new(new_episode_data)
-  end
-
   class << self
 
     def find_or_fetch_from_tvdb_id(tvdb_id)
