@@ -137,7 +137,9 @@ module Trakt
 
       def enriched_results
         results.each do |season|
-          season['episodes'] = Trakt::Show::Season.new(tvdb_id, season['season']).enriched_results
+          episodes = Trakt::Show::Season.new(tvdb_id, season['season']).enriched_results
+          season['episodes'] = episodes
+          season['episode_count'] = episodes.length
         end
       end
     end
