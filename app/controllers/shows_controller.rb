@@ -8,7 +8,6 @@ class ShowsController < ApplicationController
     render :text => library
   end
 
-
   def seasons
     tvdb_id = params[:tvdb_id]
     result = Rails.cache.fetch("seasons_#{tvdb_id}", :expires_in => 10.minutes) do
@@ -24,6 +23,13 @@ class ShowsController < ApplicationController
       Trakt::Show::Season.new(tvdb_id, season_number).enriched_results.to_json
     end
     render :text => result
+  end
+
+  def seasons_with_episodes
+    tvdb_id = params[:tvdb_id]
+    result = Rails.cache.fetch("season_with_episodes_#{tvdb_id}", :expires_in => 1.day) do
+      Trakt::Show::SeasonsWithEpisodes.new(tvdb_id).enriched_results.to_json
+    end
   end
 
   def trending

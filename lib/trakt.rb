@@ -129,6 +129,19 @@ module Trakt
       end
     end
 
+    class SeasonsWithEpisodes < Trakt::Show::Base
+
+      def url
+        "#{Trakt::base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
+      end
+
+      def enriched_results
+        results.each do |season|
+          season['episodes'] = Trakt::Show::Season.new(tvdb_id, season['season']).enriched_results
+        end
+      end
+    end
+
     class Seasons < Trakt::Show::Base
 
       def url
