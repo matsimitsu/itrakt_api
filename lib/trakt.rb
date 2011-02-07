@@ -172,6 +172,7 @@ module Trakt
         results.map do |ep|
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, season, ep['episode'])
           ep['overview'] = episode.overview
+          ep['title'] = episode.title
           ep['thumb'] = Trakt::external_url(episode.thumb_url)
           ep
         end
