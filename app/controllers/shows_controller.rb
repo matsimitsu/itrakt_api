@@ -30,6 +30,7 @@ class ShowsController < ApplicationController
     result = Rails.cache.fetch("season_with_episodes_#{tvdb_id}", :expires_in => 1.day) do
       Trakt::Show::SeasonsWithEpisodes.new(tvdb_id).enriched_results.to_json
     end
+    render :text => result
   end
 
   def trending
