@@ -3,6 +3,7 @@
 %table
   %tr
     %th Time
+    %th Timestamp
     %th Shows
     %th Episodes
     %th Status
@@ -10,7 +11,8 @@
   - @updates.each do |update|
     %tr
       %td= update.created_at.strftime("%d-%m-%Y %I:%M")
+      %td= link_to update.timestamp, "http://www.thetvdb.com/api/Updates.php?time=#{update.timestamp}&type=all"
       %td= update.series.length
       %td= update.episodes.length
-      %td= update.failiures? ? 'Failed' : 'OK'
+      %td= update.status
       %td= link_to 'Show', update_path(update)

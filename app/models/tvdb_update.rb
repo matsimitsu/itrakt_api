@@ -14,8 +14,14 @@ class TvdbUpdate
   field :series, :type => Array, :default => []
   field :results, :type => Hash, :default => {}
 
-  def failiures?
-    results.values.map { |res| res['status'] }.include?('failed')
+  def status
+    if results.keys.length < (episodes.length + series.length)
+      'Pending'
+    elsif results.values.map { |res| res['status'] }.include?('failed')
+      'Failed'
+    else
+      'OK'
+    end
   end
 
   def run
@@ -39,7 +45,6 @@ class TvdbUpdate
       save!
     end
   end
-
 
   def self.fetch
     last_update = TvdbUpdate.last ? TvdbUpdate.last.timestamp : 1.day.ago.to_i
