@@ -4,8 +4,11 @@
   %dt Time
   %dd= @update.created_at.strftime("%d-%m-%Y %I:%M")
 
+  %dt Type
+  %dd= @update.update_type
+
   %dt Timestamp
-  %dd= link_to @update.timestamp, "http://www.thetvdb.com/api/Updates.php?time=#{@update.timestamp}&type=all"
+  %dd= link_to @update.timestamp, "http://www.thetvdb.com/api/Updates.php?time=#{@update.timestamp}&type=all" if @update.timestamp
 
   %dt Shows
   %dd= @update.series.length

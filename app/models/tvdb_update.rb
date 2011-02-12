@@ -8,11 +8,11 @@ class TvdbUpdate
     :episodes => 'Episode'
   }
 
-
   field :timestamp, :type => Integer
   field :episodes, :type => Array, :default => []
   field :series, :type => Array, :default => []
   field :results, :type => Hash, :default => {}
+  field :update_type
 
   def status
     if results.keys.length < (episodes.length + series.length)
@@ -27,7 +27,7 @@ class TvdbUpdate
   def run
     series.each do |serie_id|
       show = Show.first(:conditions => { :tvdb_id => serie_id})
-      unless show.present?
+      if update_type != 'tvdb' || !show.present?
         begin
           show = Show.update_or_create_from_tvdb_id(serie_id)
           results[serie_id] = { :type => 'show', :status => 'ok', :show_id => show.id }
@@ -54,7 +54,7 @@ class TvdbUpdate
   end
 
   def self.fetch
-    last_update = TvdbUpdate.last ? TvdbUpdate.last.timestamp : 1.day.ago.to_i
+    last_update = TvdbUpdate.last(:conditions => { :update_type => 'tvdb'}).timestamp rescue 1.day.ago.to_i
     tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
     tvdb_results = tvdb.get_all_updates(last_update)
 
@@ -63,7 +63,7 @@ class TvdbUpdate
     API_FIELDS.each do |fld, remote_fld|
       new_update_data[fld] = tvdb_results[remote_fld]
     end
-
+    new_update_data[:update_type] = 'tvdb'
     create(new_update_data)
   end
 

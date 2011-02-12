@@ -83,10 +83,8 @@ class Show
     end
 
     def update_outdated
-      Show.where(:updated_at.lt => 1.week.ago.utc).map(&:tvdb_id).each do |tvdb_id|
-        Show.update_or_create_from_tvdb_id(tvdb_id)
-        sleep 5 # lets not hammer the server
-      end
+      tvdb_ids = Show.where(:updated_at.lt => 1.week.ago.utc).map(&:tvdb_id)
+      TvdbUpdate.create(:series => tvdb_ids, :update_type => 'show').run if tvdb_ids.any?
     end
   end
 end
