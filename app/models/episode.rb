@@ -42,6 +42,10 @@ class Episode
     thumb_filename.present? ? thumb.url : show.thumb_url
   end
 
+  def updateable?
+    updated_at == nil || updated_at < 6.hours.ago
+  end
+
   class << self
 
     def find_or_fetch_from_show_and_season_and_episode(show, season, episode)
@@ -70,6 +74,7 @@ class Episode
 
       tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
       tvdb_episode = tvdb.get_episode_by_id(tvdb_id)
+
       show = Show.find_or_fetch_from_tvdb_id(tvdb_episode.series_id)
 
       episode = show.episodes.find_or_create_by(:tvdb_id => tvdb_id)

@@ -28,7 +28,8 @@
         - if result['show_id'].present?
           = Show.find(result['show_id']).name
         - elsif result['episode_id'].present?
-          = Episode.find(result['episode_id']).name
+          - episode = Episode.find(result['episode_id'])
+          = "#{episode.show.name} >> #{episode.name}"
         - else
           TVDB ID:
           = key

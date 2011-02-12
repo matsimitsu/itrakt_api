@@ -32,6 +32,9 @@ class Show
   mount_uploader :poster, PosterUploader
   mount_uploader :default_thumb, DefaultThumbUploader
 
+  def updateable?
+    updated_at == nil || updated_at < 1.day.ago || name.blank?
+  end
 
   def poster_url
     poster_filename.present? ? poster.url : '/images/default_poster.jpg'
@@ -73,9 +76,10 @@ class Show
 
     def update_or_create_from_tvdb_id(tvdb_id)
       Rails.logger.info("Requesting show from TVDB: #{tvdb_id}")
+      show = Show.find_or_create_by(:tvdb_id => tvdb_id)
+
       tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
       tvdb_show = tvdb.get_series_by_id(tvdb_id)
-      show = Show.find_or_create_by(:tvdb_id => tvdb_id)
 
       new_show_data = {}
 

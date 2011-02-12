@@ -33,6 +33,7 @@ class TvdbUpdate
         results[serie_id] = { :type => 'show', :status => 'failed', :message => e.message }
       end
       save!
+      sleep 5 # Let's not hammer the server
     end
 
     episodes.each do |episode_id|
@@ -43,6 +44,7 @@ class TvdbUpdate
         results[episode_id] = { :type => 'episode', :status => 'failed', :message => e.message }
       end
       save!
+      sleep 5 # Let's not hammer the server
     end
   end
 
