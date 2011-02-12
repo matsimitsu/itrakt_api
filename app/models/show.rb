@@ -32,6 +32,8 @@ class Show
   mount_uploader :poster, PosterUploader
   mount_uploader :default_thumb, DefaultThumbUploader
 
+  validates_presence_of :name, :on => :update
+
   def updateable?
     updated_at == nil || updated_at < 1.day.ago || name.blank?
   end
@@ -49,50 +51,36 @@ class Show
     tvdb.get_series_by_id(tvdb_id)
   end
 
+  def update_data_from_tvdb_results(tvdb_show)
+    new_show_data = {}
+
+    API_FIELDS.each do |fld, remote_fld|
+      new_show_data[fld] = tvdb_show.send(remote_fld)
+    end
+
+    new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil
+    new_show_data[:remote_poster_url] = tvdb_show.posters('en').first.url rescue nil
+    new_show_data[:remote_default_thumb_url] = tvdb_show.fanart('en').first.url rescue nil
+
+    update_attributes(new_show_data)
+    self
+  end
+
+
   class << self
 
     def find_or_fetch_from_tvdb_id(tvdb_id)
-      first(:conditions => { :tvdb_id => tvdb_id }) || create_from_tvdb_id(tvdb_id)
+      first(:conditions => { :tvdb_id => tvdb_id }) || update_or_create_from_tvdb_id(tvdb_id)
     end
-
-    def create_from_tvdb_id(tvdb_id)
-      Rails.logger.info("Requesting show from TVDB: #{tvdb_id}")
-      tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
-      show = tvdb.get_series_by_id(tvdb_id)
-
-      new_show_data = {}
-
-      API_FIELDS.each do |fld, remote_fld|
-        new_show_data[fld] = show.send(remote_fld)
-      end
-
-      new_show_data[:remote_banner_url] = show.series_banners('en').first.url rescue nil
-      new_show_data[:remote_poster_url] = show.posters('en').first.url rescue nil
-      new_show_data[:remote_default_thumb_url] = show.fanart('en').first.url rescue nil
-
-      create(new_show_data)
-    end
-
 
     def update_or_create_from_tvdb_id(tvdb_id)
       Rails.logger.info("Requesting show from TVDB: #{tvdb_id}")
-      show = Show.find_or_create_by(:tvdb_id => tvdb_id)
 
       tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
       tvdb_show = tvdb.get_series_by_id(tvdb_id)
 
-      new_show_data = {}
-
-      API_FIELDS.each do |fld, remote_fld|
-        new_show_data[fld] = tvdb_show.send(remote_fld)
-      end
-
-      new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil
-      new_show_data[:remote_poster_url] = tvdb_show.posters('en').first.url rescue nil
-      new_show_data[:remote_default_thumb_url] = tvdb_show.fanart('en').first.url rescue nil
-
-      show.update_attributes(new_show_data)
-      show
+      show = Show.find_or_create_by(:tvdb_id => tvdb_id)
+      show.update_data_from_tvdb_results(tvdb_show)
     end
 
   end

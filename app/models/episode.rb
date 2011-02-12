@@ -11,7 +11,8 @@ class Episode
     :name => 'name',
     :air_date => 'air_date',
     :guest_stars => 'guest_stars',
-    :tvdb_id => 'id'
+    :tvdb_id => 'id',
+    :show_tvdb_id => 'series_id'
   }
 
   field :season_number, :type => Integer
@@ -38,6 +39,8 @@ class Episode
 
   mount_uploader :thumb, EpisodeThumbUploader
 
+  validates_presence_of :name, :on => :update
+
   def thumb_url
     thumb_filename.present? ? thumb.url : show.thumb_url
   end
@@ -46,27 +49,32 @@ class Episode
     updated_at == nil || updated_at < 6.hours.ago
   end
 
+  def update_data_from_tvdb_results(tvdb_episode)
+    new_episode_data = {}
+    API_FIELDS.each do |fld, remote_fld|
+      new_episode_data[fld] = tvdb_episode.send(remote_fld)
+    end
+
+    new_episode_data[:remote_thumb_url] = tvdb_episode.thumb rescue nil
+
+    update_attributes(new_episode_data)
+    self
+  end
+
   class << self
 
     def find_or_fetch_from_show_and_season_and_episode(show, season, episode)
       first(:conditions => { :show_id => show.id, :season_number => season, :episode_number => episode }) || create_from_show_and_season_and_episode(show, season, episode)
     end
 
-    def create_from_show_and_season_and_episode(show, season, episode)
-      Rails.logger.info("Requesting episode from TVDB: #{show.name} [#{season}x#{episode}]")
+    def create_from_show_and_season_and_episode(show, season_number, episode_number)
+      Rails.logger.info("Requesting episode from TVDB: #{show.name} [#{season_number}x#{episode_number}]")
 
       tvdb = show.tvdb_reference
-      episode = tvdb.get_episode(season, episode)
+      tvdb_episode = tvdb.get_episode(season_number, episode_number)
 
-      new_episode_data = {}
-      API_FIELDS.each do |fld, remote_fld|
-        new_episode_data[fld] = episode.send(remote_fld)
-      end
-
-      new_episode_data[:show_tvdb_id] = show.tvdb_id
-      new_episode_data[:remote_thumb_url] = episode.thumb rescue nil
-
-      show.episodes.create(new_episode_data)
+      episode = show.episodes.find_or_create_by(:tvdb_id => tvdb_episode.id)
+      episode.update_data_from_tvdb_results(tvdb_episode)
     end
 
     def update_or_create_from_tvdb_id(tvdb_id)
@@ -76,19 +84,9 @@ class Episode
       tvdb_episode = tvdb.get_episode_by_id(tvdb_id)
 
       show = Show.find_or_fetch_from_tvdb_id(tvdb_episode.series_id)
-
       episode = show.episodes.find_or_create_by(:tvdb_id => tvdb_id)
 
-      new_episode_data = {}
-      API_FIELDS.each do |fld, remote_fld|
-        new_episode_data[fld] = tvdb_episode.send(remote_fld)
-      end
-
-      new_episode_data[:show_tvdb_id] = show.tvdb_id
-      new_episode_data[:remote_thumb_url] = tvdb_episode.thumb rescue nil
-
-      episode.update_attributes(new_episode_data)
-      episode
+      episode.update_data_from_tvdb_results(tvdb_episode)
     end
   end
 
