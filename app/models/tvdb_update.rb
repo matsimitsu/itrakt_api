@@ -23,15 +23,17 @@ class TvdbUpdate
       rescue => e
         results[serie_id] = { :type => 'show', :status => 'failed', :message => e.message }
       end
+      save!
     end
 
     episodes.each do |episode_id|
       begin
         episode = Episode.update_or_create_from_tvdb_id(episode_id)
-        results[serie_id] = { :type => 'episode', :status => 'ok', :episode_id => episode.id }
+        results[episode_id] = { :type => 'episode', :status => 'ok', :episode_id => episode.id }
       rescue => e
-        results[serie_id] = { :type => 'episode', :status => 'failed', :message => e.message }
+        results[episode_id] = { :type => 'episode', :status => 'failed', :message => e.message }
       end
+      save!
     end
   end
 
