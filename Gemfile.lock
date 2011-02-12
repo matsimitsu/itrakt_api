@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/matsimitsu/tvdb_party.git
-  revision: 861a9c6d792d7f1b71f60d1968e9d720d2b10834
+  revision: 1ba64271f3280f709d4a3cc08f8f087cd42fb179
   specs:
     tvdb_party (0.6.0)
       httparty (>= 0.6.1)
