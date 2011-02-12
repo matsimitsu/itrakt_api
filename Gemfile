@@ -13,6 +13,7 @@ gem 'bson_ext'
 gem 'will_paginate', '3.0.pre2'
 gem 'mini_magick'
 gem 'carrierwave'
+gem 'whenever'
 
 gem 'capistrano'
 gem 'capfire'

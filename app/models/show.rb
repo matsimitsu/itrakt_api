@@ -71,5 +71,26 @@ class Show
       create(new_show_data)
     end
 
+
+    def update_or_create_from_tvdb_id(tvdb_id)
+      Rails.logger.info("Requesting show from TVDB: #{tvdb_id}")
+      tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
+      tvdb_show = tvdb.get_series_by_id(tvdb_id)
+      show = Show.find_or_create_by(:tvdb_id => tvdb_id)
+
+      new_show_data = {}
+
+      API_FIELDS.each do |fld, remote_fld|
+        new_show_data[fld] = tvdb_show.send(remote_fld)
+      end
+
+      new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil
+      new_show_data[:remote_poster_url] = tvdb_show.posters('en').first.url rescue nil
+      new_show_data[:remote_default_thumb_url] = tvdb_show.fanart('en').first.url rescue nil
+
+      show.update_attributes(new_show_data)
+      show
+    end
+
   end
 end

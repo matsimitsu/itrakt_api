@@ -64,6 +64,27 @@ class Episode
 
       show.episodes.create(new_episode_data)
     end
+
+    def update_or_create_from_tvdb_id(tvdb_id)
+      Rails.logger.info("Requesting episode from TVDB: #{tvdb_id}")
+
+      tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
+      tvdb_episode = tvdb.get_episode_by_id(tvdb_id)
+      show = Show.find_or_fetch_from_tvdb_id(tvdb_episode.series_id)
+
+      episode = show.episodes.find_or_create_by(:tvdb_id => tvdb_id)
+
+      new_episode_data = {}
+      API_FIELDS.each do |fld, remote_fld|
+        new_episode_data[fld] = tvdb_episode.send(remote_fld)
+      end
+
+      new_episode_data[:show_tvdb_id] = show.tvdb_id
+      new_episode_data[:remote_thumb_url] = tvdb_episode.thumb rescue nil
+
+      episode.update_attributes(new_episode_data)
+      episode
+    end
   end
 
 end
