@@ -11,3 +11,7 @@ end
 every 5.minutes do
   rake 'update:trending'
 end
+
+every 1.day, :at => '8:00 am' do
+  rake 'update:shows'
+end

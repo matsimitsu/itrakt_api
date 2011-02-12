@@ -26,11 +26,16 @@ class TvdbUpdate
 
   def run
     series.each do |serie_id|
-      begin
-        show = Show.update_or_create_from_tvdb_id(serie_id)
-        results[serie_id] = { :type => 'show', :status => 'ok', :show_id => show.id }
-      rescue => e
-        results[serie_id] = { :type => 'show', :status => 'failed', :message => e.message }
+      show = Show.first(:conditions => { :tvdb_id => serie_id})
+      unless show.present?
+        begin
+          show = Show.update_or_create_from_tvdb_id(serie_id)
+          results[serie_id] = { :type => 'show', :status => 'ok', :show_id => show.id }
+        rescue => e
+          results[serie_id] = { :type => 'show', :status => 'failed', :message => e.message }
+        end
+      else
+        results[serie_id] = { :type => 'show', :status => 'skipped', :show_id => show.id }
       end
       save!
       sleep 5 # Let's not hammer the server

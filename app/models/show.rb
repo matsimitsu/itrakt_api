@@ -66,7 +66,6 @@ class Show
     self
   end
 
-
   class << self
 
     def find_or_fetch_from_tvdb_id(tvdb_id)
@@ -83,5 +82,11 @@ class Show
       show.update_data_from_tvdb_results(tvdb_show)
     end
 
+    def update_outdated
+      Show.where(:updated_at.lt => 1.week.ago.utc).map(&:tvdb_id).each do |tvdb_id|
+        Show.update_or_create_from_tvdb_id(tvdb_id)
+        sleep 5 # lets not hammer the server
+      end
+    end
   end
 end
