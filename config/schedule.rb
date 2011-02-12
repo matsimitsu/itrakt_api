@@ -4,7 +4,7 @@ set :output, File.join(path, 'log/cron.log')
 #every 1.day, :at => '4:00 am' do
 #end
 
-every 1.hours do
+every 20.minutes do
   rake 'update:tvdb'
 end
 

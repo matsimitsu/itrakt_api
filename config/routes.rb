@@ -6,6 +6,8 @@ Itrakt::Application.routes.draw do
   match 'shows/:tvdb_id/seasons' => 'shows#seasons'
   match 'shows/:tvdb_id/seasons_with_episodes' => 'shows#seasons_with_episodes'
 
+  resources :updates
+
   resources :shows do
     get :trending, :on => :collection
   end

@@ -1,0 +1,16 @@
+%h1 Updates
+
+%table
+  %tr
+    %th Time
+    %th Shows
+    %th Episodes
+    %th Status
+    %th
+  - @updates.each do |update|
+    %tr
+      %td= update.created_at.strftime("%d-%m-%Y %I:%M")
+      %td= update.series.length
+      %td= update.episodes.length
+      %td= update.failiures? ? 'Failed' : 'OK'
+      %td= link_to 'Show', update_path(update)

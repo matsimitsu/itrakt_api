@@ -14,6 +14,9 @@ class TvdbUpdate
   field :series, :type => Array, :default => []
   field :results, :type => Hash, :default => {}
 
+  def failiures?
+    results.values.map { |res| res['status'] }.include?('failed')
+  end
 
   def run
     series.each do |serie_id|

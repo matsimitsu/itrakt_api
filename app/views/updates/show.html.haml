@@ -1,0 +1,25 @@
+%h1 Update
+
+%dl
+  %dt Time
+  %dd= @update.created_at.strftime("%d-%m-%Y %I:%M")
+
+  %dt Shows
+  %dd= @update.series.length
+
+  %dt Episodes
+  %dd= @update.episodes.length
+
+  %dt Status
+  %dd= @update.failiures? ? 'Failed' : 'OK'
+
+%table
+  %tr
+    %th type
+    %th Status
+    %th Message
+  - @update.results.each do |result|
+    %tr
+      %td= result['type']
+      %td= result['status']
+      %td= result['message']
