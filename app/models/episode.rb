@@ -64,7 +64,7 @@ class Episode
   class << self
 
     def find_or_fetch_from_show_and_season_and_episode(show, season, episode)
-      first(:conditions => { :show_id => show.id, :season_number => season, :episode_number => episode }) || create_from_show_and_season_and_episode(show, season, episode)
+      first(:conditions => { :show_id => show.id, :season_number => season, :episode_number => episode, :name.ne => nil }) || create_from_show_and_season_and_episode(show, season, episode)
     end
 
     def create_from_show_and_season_and_episode(show, season_number, episode_number)
