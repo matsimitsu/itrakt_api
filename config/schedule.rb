@@ -5,5 +5,9 @@ set :output, File.join(path, 'log/cron.log')
 #end
 
 every 6.hours do
-  rake 'rake updater:update'
+  rake 'update:tvdb'
+end
+
+every 5.minutes do
+  rake 'update:trending'
 end
