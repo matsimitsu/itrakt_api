@@ -27,7 +27,6 @@ class Show
   field :air_time
 
   references_many :episodes
-  embeds_many :embedded_episodes, :class_name => 'Show::EmbeddedEpisode'
 
   mount_uploader :banner, BannerUploader
   mount_uploader :poster, PosterUploader
