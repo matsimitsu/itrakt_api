@@ -11,7 +11,7 @@
   %dd= link_to @update.timestamp, "http://www.thetvdb.com/api/Updates.php?time=#{@update.timestamp}&type=all" if @update.timestamp
 
   %dt Shows
-  %dd= @update.series ? update.episodes.length : 0
+  %dd= @update.series ? @update.episodes.length : 0
 
   %dt Episodes
   %dd= @update.episodes ? @update.episodes.length : 0
