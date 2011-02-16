@@ -14,7 +14,7 @@
       %td= update.created_at.strftime("%d-%m-%Y %I:%M")
       %td= update.update_type
       %td= link_to update.timestamp, "http://www.thetvdb.com/api/Updates.php?time=#{update.timestamp}&type=all" if update.timestamp
-      %td= update.series.length
-      %td= update.episodes.length
+      %td= update.series ? update.series.length : 0
+      %td= update.episodes ? update.episodes.length : 0
       %td= update.status
       %td= link_to 'Show', update_path(update)
