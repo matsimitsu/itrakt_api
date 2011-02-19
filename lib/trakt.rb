@@ -5,11 +5,11 @@ require 'httparty'
 module Trakt
 
   def self.base_url(username=nil, password=nil)
-    if username && password
-      "http://#{username}:#{password}@api.trakt.tv"
-    else
+    #if username && password
+    #  "http://#{username}:#{password}@api.trakt.tv"
+    #else
       "http://api.trakt.tv"
-    end
+   # end
   end
 
   def self.external_url(url)
@@ -31,10 +31,10 @@ module Trakt
     class Base < Trakt::Base
 
       def initialize(username, password)
-        parser = Yajl::Parser.new
         self.username = username
         self.password = password
-        response = HTTParty.get(url)
+        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}})
+        parser = Yajl::Parser.new
         self.results = parser.parse(response.body)
       end
 
@@ -112,11 +112,11 @@ module Trakt
     class Base < Trakt::Base
 
       def initialize(username, password, tvdb_id)
-        parser = Yajl::Parser.new
         self.username = username
         self.password = password
         self.tvdb_id = tvdb_id
-        response = HTTParty.get(url)
+        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}})
+        parser = Yajl::Parser.new
         self.results = parser.parse(response.body)
       end
 
