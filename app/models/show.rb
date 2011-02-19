@@ -25,6 +25,7 @@ class Show
   field :remote_poster_url
   field :runtime
   field :air_time
+  field :update_episodes, :type => Boolean, :default => false
 
   references_many :episodes, :dependent => :delete
 
@@ -61,24 +62,34 @@ class Show
     new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil
     new_show_data[:remote_poster_url] = tvdb_show.posters('en').first.url rescue nil
     new_show_data[:remote_default_thumb_url] = tvdb_show.fanart('en').first.url rescue nil
-
     update_attributes(new_show_data)
     self
+  end
+
+  def update_episodes
+    results = Trakt::Show::SeasonsWithEpisodes.new(tvdb_id).results
+    episodes = results.map { |r| r['episodes'] }
+    episodes.each do |episode|
+      Episode.find_or_fetch_from_show_and_season_and_episode(self, episode['season'], episode['episode'])
+      sleep 2
+    end
+    update_attributes(:update_episodes, false)
   end
 
   class << self
 
     def find_or_fetch_from_tvdb_id(tvdb_id)
-      first(:conditions => { :tvdb_id => tvdb_id }) || update_or_create_from_tvdb_id(tvdb_id)
+      first(:conditions => { :tvdb_id => tvdb_id }) || update_or_create_from_tvdb_id(tvdb_id, { :update_episodes => true })
     end
 
-    def update_or_create_from_tvdb_id(tvdb_id)
+    def update_or_create_from_tvdb_id(tvdb_id, default_attributes={})
       Rails.logger.info("Requesting show from TVDB: #{tvdb_id}")
 
       tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
       tvdb_show = tvdb.get_series_by_id(tvdb_id)
 
       show = Show.find_or_create_by(:tvdb_id => tvdb_id)
+      show.update_attributes(default_attributes)
       show.update_data_from_tvdb_results(tvdb_show)
     end
 
