@@ -2,7 +2,21 @@ require 'uri'
 require 'yajl/http_stream'
 require 'digest/sha1'
 require 'httparty'
+
 module Trakt
+
+  class SkipParsing
+    include HTTParty
+
+    # Parse the response body however you like
+    class Parser::Simple < HTTParty::Parser
+      def parse
+        body
+      end
+    end
+
+    parser Parser::Simple
+  end
 
   def self.base_url(username=nil, password=nil)
     #if username && password
@@ -33,7 +47,7 @@ module Trakt
       def initialize(username, password)
         self.username = username
         self.password = password
-        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}})
+        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}, :parser => Trakt::SkipParsing::Parser})
         parser = Yajl::Parser.new
         self.results = parser.parse(response.body)
       end
@@ -115,7 +129,7 @@ module Trakt
         self.username = username
         self.password = password
         self.tvdb_id = tvdb_id
-        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}})
+        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}, :parser => Trakt::SkipParsing::Parser})
         parser = Yajl::Parser.new
         self.results = parser.parse(response.body)
       end
