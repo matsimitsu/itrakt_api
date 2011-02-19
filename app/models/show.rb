@@ -26,7 +26,7 @@ class Show
   field :runtime
   field :air_time
 
-  references_many :episodes
+  references_many :episodes, :dependent => :delete
 
   mount_uploader :banner, BannerUploader
   mount_uploader :poster, PosterUploader
