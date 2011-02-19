@@ -24,18 +24,10 @@ module Trakt
     def request
       request = HTTPI::Request.new
       request.url = url
-      request.auth.basic username, password
+      request.auth.basic username, password if username && password
       result = HTTPI.get request, :curb
       parser = Yajl::Parser.new
-      begin
-        data = parser.parse(result.raw_body)
-      rescue Yajl::ParseError
-        Rails.logger.error("URL: #{url}")
-        Rails.logger.error("ERROR PARSING: #{result.raw_body}")
-      ensure
-        data = []
-      end
-      data
+      parser.parse(result.raw_body)
     end
   end
 
@@ -206,7 +198,7 @@ module Trakt
     class Trending < Trakt::Base
 
       def initialize
-        self.results = Yajl::HttpStream.get(url)
+        self.results = request
       end
 
       def url
