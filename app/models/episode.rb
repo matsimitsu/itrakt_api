@@ -49,6 +49,14 @@ class Episode
     updated_at == nil || updated_at < 6.hours.ago
   end
 
+  def overview_with_default
+    overview.present? ? overview : "To be announced"
+  end
+
+  def name_with_default
+    name.present? ? name : "To be announced"
+  end
+
   def update_data_from_tvdb_results(tvdb_episode)
     new_episode_data = {}
     API_FIELDS.each do |fld, remote_fld|

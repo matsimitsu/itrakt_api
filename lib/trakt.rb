@@ -66,7 +66,7 @@ module Trakt
             res['show']['network'] = show.network
             res['show']['air_time'] = Time.parse(show.air_time).strftime("%T") rescue nil
             episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
-            res['episode']['overview'] = episode.overview
+            res['episode']['overview'] = episode.overview_with_default
             res['episode']['thumb'] = Trakt::external_url(episode.thumb_url)
             res
           end
@@ -88,7 +88,7 @@ module Trakt
           res['show']['overview'] = show.overview
 
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
-          res['episode']['overview'] = episode.overview
+          res['episode']['overview'] = episode.overview_with_default
           res
         end
       end
@@ -119,7 +119,7 @@ module Trakt
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
         results['top_episodes'].map do |ep|
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, ep['season'], ep['number'])
-          ep['overview'] = episode.overview
+          ep['overview'] = episode.overview_with_default
           ep['thumb'] = Trakt::external_url(episode.thumb_url)
           ep
         end
@@ -171,8 +171,8 @@ module Trakt
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
         results.map do |ep|
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, season, ep['episode'])
-          ep['overview'] = episode.overview
-          ep['name'] = episode.name
+          ep['overview'] = episode.overview_with_default
+          ep['name'] = episode.name_with_default
           ep['thumb'] = Trakt::external_url(episode.thumb_url)
           ep
         end
