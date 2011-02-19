@@ -1,6 +1,6 @@
 class ShowsController < ApplicationController
 
-  before_filter :set_username_and_password
+  before_filter :set_username_and_password, :except => [:trending]
 
   def show
     tvdb_id = params[:id]
