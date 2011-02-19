@@ -16,4 +16,9 @@ class PosterUploader < CarrierWave::Uploader::Base
     end
   end
 
+
+  version :retina do
+    process :resize_to_fit => [276,406]
+  end
+
 end
