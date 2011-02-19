@@ -39,7 +39,7 @@ class Show
   end
 
   def poster_url
-    poster_filename.present? ? poster.url : nil
+    poster_filename.present? ? poster.url(:retina) : nil
   end
 
   def thumb_url
