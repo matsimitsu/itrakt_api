@@ -39,7 +39,7 @@ class Show
   end
 
   def poster_url
-    poster_filename.present? ? poster.url : '/images/default_poster.jpg'
+    poster_filename.present? ? poster.url : nil
   end
 
   def thumb_url
