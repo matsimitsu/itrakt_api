@@ -19,6 +19,11 @@ module Trakt
 
   class Base
     attr_accessor :results, :username, :password, :tvdb_id
+
+    def base_url
+      Trakt::base_url(self.username, self.password)
+    end
+
   end
 
   module User
@@ -31,10 +36,6 @@ module Trakt
         self.password = password
         response = HTTParty.get(url)
         self.results = parser.parse(response.body)
-      end
-
-      def base_url
-        Trakt::base_url(self.username, self.password)
       end
 
     end
@@ -111,10 +112,12 @@ module Trakt
     class Base < Trakt::Base
 
       def initialize(username, password, tvdb_id)
+        parser = Yajl::Parser.new
         self.username = username
         self.password = password
         self.tvdb_id = tvdb_id
-        self.results = Yajl::HttpStream.get(url)
+        response = HTTParty.get(url)
+        self.results = parser.parse(response.body)
       end
 
     end
@@ -148,7 +151,7 @@ module Trakt
 
       def enriched_results
         results.each do |season|
-          episodes = Trakt::Show::Season.new(tvdb_id, season['season']).enriched_results
+          episodes = Trakt::Show::Season.new(username, password, tvdb_id, season['season']).enriched_results
           season['episodes'] = episodes
           season['episode_count'] = episodes.length
         end
@@ -170,10 +173,8 @@ module Trakt
       attr_accessor :season
 
       def initialize(username, password, tvdb_id, season)
-        self.username = username
-        self.password = password
         self.season = season
-        super(tvdb_id)
+        super(username, password, tvdb_id)
       end
 
       def url
