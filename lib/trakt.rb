@@ -25,7 +25,17 @@ module Trakt
       request = HTTPI::Request.new
       request.url = url
       request.auth.basic username, password
-      HTTPI.get request, :curb
+      result = HTTPI.get request, :curb
+      parser = Yajl::Parser.new
+      begin
+        data = parser.parse(result.raw_body)
+      rescue Yajl::ParseError
+        Rails.logger.error("URL: #{url}")
+        Rails.logger.error("ERROR PARSING: #{result.raw_body}")
+      ensure
+        data = []
+      end
+      data
     end
   end
 
@@ -36,8 +46,7 @@ module Trakt
       def initialize(username, password)
         self.username = username
         self.password = password
-        parser = Yajl::Parser.new
-        self.results = parser.parse(request.raw_body)
+        self.results = request
       end
 
     end
@@ -117,8 +126,7 @@ module Trakt
         self.username = username
         self.password = password
         self.tvdb_id = tvdb_id
-        parser = Yajl::Parser.new
-        self.results = parser.parse(request.raw_body)
+        self.results = request
       end
 
     end
