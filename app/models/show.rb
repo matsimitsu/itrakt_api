@@ -93,6 +93,12 @@ class Show
       show.update_data_from_tvdb_results(tvdb_show)
     end
 
+    def fetch_episodes
+      Show.where(:update_episodes => true).each do |show|
+        show.update_episodes
+      end
+    end
+
     def update_outdated
       tvdb_ids = Show.where(:updated_at.lt => 1.week.ago.utc).map(&:tvdb_id)
       TvdbUpdate.create(:series => tvdb_ids, :update_type => 'show').run if tvdb_ids.any?

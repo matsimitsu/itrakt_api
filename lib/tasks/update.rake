@@ -12,4 +12,8 @@ namespace :update do
     Rails.cache.write("trending", Trakt::Show::Trending.new.enriched_results.to_json, :expires_in => 5.minutes)
   end
 
+  task :fetch_episodes => :environment do
+    Show.fetch_episodes
+  end
+
 end
