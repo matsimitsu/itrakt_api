@@ -1,29 +1,12 @@
 require 'uri'
-require 'yajl/http_stream'
+require 'yajl'
 require 'digest/sha1'
-require 'httparty'
+require 'curb'
 
 module Trakt
 
-  class SkipParsing
-    include HTTParty
-
-    # Parse the response body however you like
-    class Parser::Simple < HTTParty::Parser
-      def parse
-        body
-      end
-    end
-
-    parser Parser::Simple
-  end
-
-  def self.base_url(username=nil, password=nil)
-    #if username && password
-    #  "http://#{username}:#{password}@api.trakt.tv"
-    #else
-      "http://api.trakt.tv"
-   # end
+  def self.base_url
+    "http://api.trakt.tv"
   end
 
   def self.external_url(url)
@@ -35,9 +18,15 @@ module Trakt
     attr_accessor :results, :username, :password, :tvdb_id
 
     def base_url
-      Trakt::base_url(self.username, self.password)
+      Trakt::base_url
     end
 
+    def request
+      request = HTTPI::Request.new
+      request.url = url
+      request.auth.basic username, password
+      HTTPI.get request, :curb
+    end
   end
 
   module User
@@ -47,9 +36,8 @@ module Trakt
       def initialize(username, password)
         self.username = username
         self.password = password
-        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}, :parser => Trakt::SkipParsing::Parser})
         parser = Yajl::Parser.new
-        self.results = parser.parse(response.body)
+        self.results = parser.parse(request.raw_body)
       end
 
     end
@@ -129,9 +117,8 @@ module Trakt
         self.username = username
         self.password = password
         self.tvdb_id = tvdb_id
-        response = HTTParty.get(url, {:basic_auth => {:username => username, :password => password}, :parser => Trakt::SkipParsing::Parser})
         parser = Yajl::Parser.new
-        self.results = parser.parse(response.body)
+        self.results = parser.parse(request.raw_body)
       end
 
     end
