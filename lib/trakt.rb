@@ -1,11 +1,15 @@
 require 'uri'
 require 'yajl/http_stream'
 require 'digest/sha1'
-
+require 'httparty'
 module Trakt
 
-  def self.base_url
-    "http://api.trakt.tv"
+  def self.base_url(username=nil, password=nil)
+    if username && password
+      "http://#{username}:#{password}@api.trakt.tv"
+    else
+      "http://api.trakt.tv"
+    end
   end
 
   def self.external_url(url)
@@ -22,10 +26,15 @@ module Trakt
     class Base < Trakt::Base
 
       def initialize(username, password)
+        parser = Yajl::Parser.new
         self.username = username
         self.password = password
-        body = {:username => username, :password => password}.to_json
-        self.results = Yajl::HttpStream.post(url, body)
+        response = HTTParty.get(url)
+        self.results = parser.parse(response.body)
+      end
+
+      def base_url
+        Trakt::base_url(self.username, self.password)
       end
 
     end
@@ -33,7 +42,7 @@ module Trakt
     class Library < Trakt::User::Base
 
       def url
-        "#{Trakt::base_url}/user/library/shows.json/#{Trakt::API_KEY}/#{username}"
+        "#{base_url}/user/library/shows.json/#{Trakt::API_KEY}/#{username}"
       end
 
       def enriched_results
@@ -52,7 +61,7 @@ module Trakt
     class Calendar < Trakt::User::Base
 
       def url
-        "#{Trakt::base_url}/user/calendar/shows.json/#{Trakt::API_KEY}/#{username}"
+        "#{base_url}/user/calendar/shows.json/#{Trakt::API_KEY}/#{username}"
       end
 
       def enriched_results
@@ -78,7 +87,7 @@ module Trakt
     class Watched < Trakt::User::Base
 
       def url
-        "#{Trakt::base_url}/user/watched/episodes.json/#{Trakt::API_KEY}/#{username}"
+        "#{base_url}/user/watched/episodes.json/#{Trakt::API_KEY}/#{username}"
       end
 
       def enriched_results
@@ -101,7 +110,9 @@ module Trakt
 
     class Base < Trakt::Base
 
-      def initialize(tvdb_id)
+      def initialize(username, password, tvdb_id)
+        self.username = username
+        self.password = password
         self.tvdb_id = tvdb_id
         self.results = Yajl::HttpStream.get(url)
       end
@@ -112,7 +123,7 @@ module Trakt
     class Show < Trakt::Show::Base
 
       def url
-        "#{Trakt::base_url}/show/summary.json/#{Trakt::API_KEY}/#{tvdb_id}/true"
+        "#{base_url}/show/summary.json/#{Trakt::API_KEY}/#{tvdb_id}/true"
       end
 
       def enriched_results
@@ -132,7 +143,7 @@ module Trakt
     class SeasonsWithEpisodes < Trakt::Show::Base
 
       def url
-        "#{Trakt::base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
+        "#{base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
       end
 
       def enriched_results
@@ -147,7 +158,7 @@ module Trakt
     class Seasons < Trakt::Show::Base
 
       def url
-        "#{Trakt::base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
+        "#{base_url}/show/seasons.json/#{Trakt::API_KEY}/#{tvdb_id}"
       end
 
       def enriched_results
@@ -158,13 +169,15 @@ module Trakt
     class Season < Trakt::Show::Base
       attr_accessor :season
 
-      def initialize(tvdb_id, season)
+      def initialize(username, password, tvdb_id, season)
+        self.username = username
+        self.password = password
         self.season = season
         super(tvdb_id)
       end
 
       def url
-        "#{Trakt::base_url}/show/season.json/#{Trakt::API_KEY}/#{tvdb_id}/#{season}"
+        "#{base_url}/show/season.json/#{Trakt::API_KEY}/#{tvdb_id}/#{season}"
       end
 
       def enriched_results

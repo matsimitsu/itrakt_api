@@ -204,6 +204,7 @@ DEPENDENCIES
   faker
   fuubar
   haml (~> 3.0)
+  httparty
   json_pure
   lemonade (= 0.3.4)
   machinist_mongo (= 1.1.1)

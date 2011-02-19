@@ -14,6 +14,7 @@ gem 'will_paginate', '3.0.pre2'
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'whenever'
+gem 'httparty'
 
 gem 'capistrano'
 gem 'capfire'
