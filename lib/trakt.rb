@@ -184,14 +184,31 @@ module Trakt
 
       def enriched_results
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
-        results.map do |ep|
+
+        show_result = {}
+        show_result['poster'] = Trakt::external_url(show.poster_url)
+        show_result['title'] = show.name
+        show_result['overview'] = show.overview
+        show_result['network'] = show.network
+        show_result['air_time'] = Time.parse(show.air_time).strftime("%T") rescue nil
+
+        return_results = []
+        results.each do |ep|
+          res = {}
           episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, season, ep['episode'])
-          ep['overview'] = episode.overview_with_default
-          ep['name'] = episode.name_with_default
-          ep['thumb'] = Trakt::external_url(episode.thumb_url)
-          ep
+          res['show'] = show_result
+          res['episode'] = {}
+          res['episode']['overview'] = episode.overview_with_default
+          res['episode']['thumb'] = Trakt::external_url(episode.thumb_url)
+          res['episode']['title'] = episode.name_with_default
+          res['episode']['number'] = ep['episode']
+          res['episode']['first_aired'] = episode.air_date
+          res['episode']['season'] = season
+          res['watched'] = ep['watched']
+          res['rating'] = ep['ratings']
+          return_results << res
         end
-        results
+        return  return_results
       end
     end
 

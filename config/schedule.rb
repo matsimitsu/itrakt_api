@@ -8,6 +8,10 @@ every 1.day, :at => '09:45 am' do
   rake 'update:tvdb'
 end
 
+every 1.day, :at => '21:45 am' do
+  rake 'update:tvdb'
+end
+
 every 5.minutes do
   rake 'update:trending'
 end
