@@ -20,10 +20,10 @@ class ApplicationController < ActionController::Base
 
   protected
     def set_username_and_password
-      authenticate_with_http_basic do |user_name, password|
+      authenticate_or_request_with_http_basic do |user_name, password|
         @username, @password = user_name, password
+        @username && @password
       end
-      render :status => :unauthorized, :text => nil unless @username && @password
     end
 
     def in_admin?
