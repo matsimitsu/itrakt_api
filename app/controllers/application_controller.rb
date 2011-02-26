@@ -20,20 +20,9 @@ class ApplicationController < ActionController::Base
 
   protected
     def set_username_and_password
-      # TODO: Remove this when app uses http auth
-      if params[:name]
-        @username = params[:name]
-        @password = DEFAULT_PASSWORD
-        return
+      authenticate_with_http_basic do |user_name, password|
+        @username, @password = user_name, password
       end
-      if params[:username] && params[:password]
-        @username, @password = params[:username], params[:password]
-      else
-         authenticate_with_http_basic do |user_name, password|
-          @username, @password = user_name, password
-        end
-      end
-
       render :status => :unauthorized, :text => nil unless @username && @password
     end
 
