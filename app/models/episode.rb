@@ -35,6 +35,8 @@ class Episode
     ]
   )
 
+  index :tvdb_id
+
   referenced_in :show
 
   mount_uploader :thumb, EpisodeThumbUploader

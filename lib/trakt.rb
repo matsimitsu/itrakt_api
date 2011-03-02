@@ -202,7 +202,6 @@ module Trakt
           res['episode']['thumb'] = Trakt::external_url(episode.thumb_url)
           res['episode']['title'] = episode.name_with_default
           res['episode']['number'] = ep['episode']
-          res['episode']['first_aired'] = episode.air_date.to_i
           res['episode']['season'] = season
           res['watched'] = ep['watched']
           res['rating'] = ep['ratings']

@@ -33,6 +33,8 @@ class Show
   mount_uploader :poster, PosterUploader
   mount_uploader :default_thumb, DefaultThumbUploader
 
+  index :tvdb_id
+
   validates_presence_of :name, :on => :update
 
   def updateable?
