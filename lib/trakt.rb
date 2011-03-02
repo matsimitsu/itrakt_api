@@ -26,6 +26,9 @@ module Trakt
       request.url = url
       request.auth.basic username, password if username && password
       result = HTTPI.get request, :curb
+
+      LogItem.create(:source_name => 'Trakt', :title => 'REQUEST', :message => "Requesting: #{url}")
+
       parser = Yajl::Parser.new
       parser.parse(result.raw_body)
     end

@@ -36,6 +36,11 @@ class Show
   index :tvdb_id
 
   validates_presence_of :name, :on => :update
+  after_save :log_data
+
+  def log_data
+    LogItem.create(:source_name => self.class.name, :title => name, :message => "Updating #{name}")
+  end
 
   def updateable?
     updated_at == nil || updated_at < 1.day.ago || name.blank?

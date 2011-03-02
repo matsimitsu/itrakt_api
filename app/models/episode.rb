@@ -43,6 +43,13 @@ class Episode
 
   validates_presence_of :name, :on => :update
 
+  after_save :log_data
+
+
+  def log_data
+    LogItem.create(:source_name => self.class.name, :title => name, :message => "Updating #{name}")
+  end
+
   def thumb_url
     thumb_filename.present? ? thumb.url : show.thumb_url
   end
