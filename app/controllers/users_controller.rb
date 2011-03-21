@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   end
 
   def calendar
-    render :text => Trakt::User::Watched.new(@username, @password).enriched_results.to_json
+    render :text => Trakt::User::Calendar.new(@username, @password).enriched_results.to_json
   end
 
   def library

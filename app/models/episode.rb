@@ -69,9 +69,16 @@ class Episode
   end
 
   def update_data_from_tvdb_results(tvdb_episode)
+    ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+
     new_episode_data = {}
     API_FIELDS.each do |fld, remote_fld|
-      new_episode_data[fld] = tvdb_episode.send(remote_fld)
+      remote_data = tvdb_episode.send(remote_fld)
+      if remote_data.is_a?(String)
+        new_episode_data[fld] = ic.iconv(remote_data)
+      elsif remote_data.is_a?(Array)
+        remote_data.map { |rd| ic.iconv(rd) }
+      end
     end
 
     new_episode_data[:remote_thumb_url] = tvdb_episode.thumb rescue nil
