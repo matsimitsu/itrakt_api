@@ -66,18 +66,18 @@ class Show
     new_show_data = {}
 
     API_FIELDS.each do |fld, remote_fld|
-      remote_data = tvdb_show.send(remote_fld)
-      if remote_data.is_a?(String)
-        encoding = UniversalDetector::chardet(remote_data)["encoding"] #detects the str encoding
-        remote_data = Iconv.iconv("UTF-8", encoding, remote_data).to_s
-      end
-      new_show_data[fld] = remote_data
+      new_show_data[fld] = tvdb_show.send(remote_fld)
     end
 
     new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil
     new_show_data[:remote_poster_url] = tvdb_show.posters('en').first.url rescue nil
     new_show_data[:remote_default_thumb_url] = tvdb_show.fanart('en').first.url rescue nil
-    update_attributes(new_show_data)
+
+    begin
+      update_attributes(new_show_data)
+    rescue BSON::InvalidStringEncoding
+      Rails.logger.error("SHOW ENCODING FAIL FOR: #{tvdb_episode.id}")
+    end
     self
   end
 
