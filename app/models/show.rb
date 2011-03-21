@@ -66,7 +66,7 @@ class Show
     new_show_data = {}
 
     API_FIELDS.each do |fld, remote_fld|
-      remote_data = tvdb_episode.send(remote_fld)
+      remote_data = tvdb_show.send(remote_fld)
       if remote_data.is_a?(String)
         encoding = UniversalDetector::chardet(remote_data)["encoding"] #detects the str encoding
         remote_data = Iconv.iconv("UTF-8", encoding, remote_data).to_s
