@@ -1,3 +1,5 @@
+require 'UniversalDetector'
+
 class Episode
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -69,7 +71,12 @@ class Episode
   def update_data_from_tvdb_results(tvdb_episode)
     new_episode_data = {}
     API_FIELDS.each do |fld, remote_fld|
-      new_episode_data[fld] = tvdb_episode.send(remote_fld)
+      remote_data = tvdb_episode.send(remote_fld)
+      if remote_data.is_a?(String)
+        encoding = UniversalDetector::chardet(remote_data)["encoding"] #detects the str encoding
+        remote_data = Iconv.iconv("UTF-8", encoding, remote_data).to_s
+      end
+      new_episode_data[fld] = remote_data
     end
 
     new_episode_data[:remote_thumb_url] = tvdb_episode.thumb rescue nil

@@ -1,3 +1,6 @@
+require 'UniversalDetector'
+
+
 class Show
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -63,7 +66,12 @@ class Show
     new_show_data = {}
 
     API_FIELDS.each do |fld, remote_fld|
-      new_show_data[fld] = tvdb_show.send(remote_fld)
+      remote_data = tvdb_episode.send(remote_fld)
+      if remote_data.is_a?(String)
+        encoding = UniversalDetector::chardet(remote_data)["encoding"] #detects the str encoding
+        remote_data = Iconv.iconv("UTF-8", encoding, remote_data).to_s
+      end
+      new_show_data[fld] = remote_data
     end
 
     new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil

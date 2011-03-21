@@ -73,6 +73,7 @@ GEM
     carrierwave (0.5.1)
       activesupport (~> 3.0)
     celerity (0.8.7)
+    chardet (0.9.0)
     childprocess (0.1.7)
       ffi (~> 0.6.3)
     chunky_png (0.12.0)
@@ -202,6 +203,7 @@ DEPENDENCIES
   capistrano
   capybara
   carrierwave
+  chardet
   compass
   curb
   database_cleaner

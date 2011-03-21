@@ -9,6 +9,7 @@ gem 'tvdb_party', :git => 'git://github.com/matsimitsu/tvdb_party.git'
 gem 'yajl-ruby'
 gem 'mongoid', :git => 'git://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
+gem 'chardet'
 
 gem 'will_paginate', '3.0.pre2'
 gem 'mini_magick'
